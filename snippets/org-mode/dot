@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: dot
+# key: dot-
+# --
+
+#+BEGIN_SRC dot :file `(user-function/ensure-orgfile-image-dir)`/${1:file}.png :cmdline -T${2:png} :exports none :results silent
+$0
+#+END_SRC
+[[file:`(user-function/ensure-orgfile-image-dir)`/$1.png]]
