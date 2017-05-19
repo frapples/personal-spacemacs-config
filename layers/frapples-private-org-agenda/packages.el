@@ -29,22 +29,22 @@
   (setq org-archive-file-header-format "")
 
   ;; https://stackoverflow.com/questions/10143959/keeping-the-context-when-archiving-in-emacs-org-mode
-  (defadvice org-archive-subtree (around my-org-archive-subtree activate)
-    (let* ((time (format-time-string
-                  (substring (cdr org-time-stamp-formats) 1 -1)))
+  (advice-add
+   'org-archive-subtree
+   :around
+   (lambda (origin-function &rest args)
+     (let* ((time (format-time-string
+                   (substring (cdr org-time-stamp-formats) 1 -1)))
 
-           (date (org-date-to-gregorian
-                           (or (org-entry-get nil "CLOSED" t) time)))
+            (date (org-date-to-gregorian
+                   (or (org-entry-get nil "CLOSED" t) time)))
 
-           ;; agenda里这个归档也有效，不是因为这里处理过，而且因为agenda用的另外一个函数包装了
-           (filepath-noext (file-name-sans-extension (org-extract-archive-file "%s ::")))
+            ;; agenda里这个归档也有效，不是因为这里处理过，而且因为agenda用的另外一个函数包装了
+            (filepath-noext (file-name-sans-extension (org-extract-archive-file "%s ::")))
 
-           ;; 利用动态作用域
-           (org-archive-location (concat filepath-noext "-archive/" (format "%d-%02d-%02d.org" (caddr date) (cadr date) (car date))))
-          )
-      ad-do-it)
-    )
-
+            ;; 利用动态作用域
+            (org-archive-location (concat filepath-noext "-archive/" (format "%d-%02d-%02d.org" (caddr date) (car date) (cadr date)))))
+       (apply origin-function args))))
 
   )
 
