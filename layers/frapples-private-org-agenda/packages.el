@@ -44,7 +44,8 @@
 
             ;; 利用动态作用域
             (org-archive-location (concat filepath-noext "-archive/" (format "%d-%02d-%02d.org" (caddr date) (car date) (cadr date)))))
-       (apply origin-function args))))
+       (apply origin-function args)
+       (org-save-all-org-buffers))))
 
   )
 
