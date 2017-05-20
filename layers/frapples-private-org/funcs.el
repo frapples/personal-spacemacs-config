@@ -39,7 +39,18 @@
   (user-function/org-at-p '(timestamp)))
 
 
+;; 模仿org-insert-heading-after-current
+(defun user-function/org-insert-todo-heading-after-current ()
+  (interactive)
+  (org-back-to-heading)
+  (org-insert-todo-heading nil)
+  (org-move-subtree-down)
+  (end-of-line 1))
 
+(defun user-function/org-insert-item-after-current (&optional checkbox)
+  (interactive)
+  (org-insert-item checkbox)
+  (org-move-item-down))
 
 
 (defun user-function/notification (message)
