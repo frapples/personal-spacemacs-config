@@ -13,6 +13,12 @@
     ((org-in-item-p) (call-interactively 'org-cycle-list-bullet))
     (t (call-interactively 'org-toggle-item))))
 
+(defun user-function/org-plus ()
+  (interactive)
+  (cond
+   ((or (org-in-item-p) (org-at-heading-p))
+    (user-function/org-toggle-statistics-cookies))))
+
  (defun user-function/org-mleader-minus ()
    (interactive)
    (cond ((org-at-timestamp-p t) (org-toggle-timestamp-type))
@@ -75,6 +81,7 @@
 
  (evil-define-key 'normal org-mode-map
    "-" 'user-function/org-minus
+   "+" 'user-function/org-plus
    (kbd "RET") 'user-function/org-return
    "[[" 'outline-previous-visible-heading
    "]]" 'outline-next-visible-heading

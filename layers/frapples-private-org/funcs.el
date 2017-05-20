@@ -53,6 +53,49 @@
   (org-move-item-down))
 
 
+(defun user-function/org-toggle-statistics-cookies ()
+  "去掉或加上[/][%]语法"
+  (interactive)
+  (let ((type (plist-get (user-function/org-find-statistics-cookies) :type)))
+    (user-function/org-delete-statistics-cookies)
+    (cond ((eq type nil) (user-function/org-insert-statistics-cookies '/))
+          ((eq type '/) (user-function/org-insert-statistics-cookies '%))
+          ((eq type '%) nil))))
+
+(defun user-function/org-delete-statistics-cookies ()
+  (let ((cookie (user-function/org-find-statistics-cookies)))
+    (when cookie
+      (delete-region (plist-get cookie :begin) (plist-get cookie :end))
+      (save-excursion
+        (end-of-line)
+        (when (eq (char-before) ? )
+          (delete-backward-char 1))))))
+
+(defun user-function/org-insert-statistics-cookies (&optional type)
+  "type为'/插入[/]语法（默认）， type为'%, 插入[%]语法 "
+  (save-excursion
+    (end-of-line)
+    (insert (concat " " (if (eq type '%) "[%]" "[/]")))
+    (org-update-statistics-cookies nil)))
+
+(defun user-function/org-find-statistics-cookies ()
+  (save-excursion
+    (beginning-of-line)
+
+    (let ((end-point (save-excursion (end-of-line) (point)))
+
+          (search-point (point))
+          (cookie nil))
+      (while (and (not cookie) search-point)
+        (setq search-point (re-search-forward "\\[" end-point t))
+        (when search-point
+          (forward-char -1)
+          (setq cookie (cadr (org-element-statistics-cookie-parser)))
+          (forward-char 1)))
+      (if cookie
+          (plist-put cookie :type (if (eq (string-match-p "%" (plist-get cookie :value)) nil) '/ '%))
+        cookie))))
+
 (defun user-function/notification (message)
   "Send a notification"
   (when (spacemacs/system-is-linux)
