@@ -19,7 +19,7 @@
    ((or (org-in-item-p) (org-at-heading-p))
     (user-function/org-toggle-statistics-cookies))))
 
- (defun user-function/org-mleader-minus ()
+(defun user-function/org-shift-minus ()
    (interactive)
    (cond ((org-at-timestamp-p t) (org-toggle-timestamp-type))
          ((org-at-heading-p) (org-priority-down))
@@ -30,12 +30,15 @@
  (defun user-function/org-return ()
    (interactive)
    (cond ((user-function/org-at-p '(link footnote-definition footnote-reference timestamp)) (org-open-at-point))
-         ((org-at-heading-p) (beginning-of-line) (if (org-entry-is-todo-p)
-                                                     (user-function/org-insert-todo-heading-after-current)
-                                                   (org-insert-heading-after-current)))
-         ((org-at-item-p) (beginning-of-line) (user-function/org-insert-item-after-current (org-at-item-checkbox-p)))
+         ((org-at-heading-p) (user-function/org-insert-heading (org-entry-is-todo-p)))
+         ((org-at-item-p) (user-function/org-insert-item (org-at-item-checkbox-p)))
          ((org-at-table-p) (org-table-insert-row t))
          (t (org-open-at-point))))
+
+(defun user-function/org-shift-return ()
+  (interactive)
+  (cond ((org-at-heading-p) (user-function/org-insert-heading (org-entry-is-todo-p) 'before))
+        ((org-at-item-p) (user-function/org-insert-item (org-at-item-checkbox-p) 'before))))
 
  (defun user-function/org-arrow-left ()
    (interactive)
@@ -76,13 +79,16 @@
    (interactive)
    (if (org-at-timestamp-p t)
        (call-interactively (if org-edit-timestamp-down-means-later
-                               'org-timestamp-down'org-timestamp-up))
+                               'org-timestamp-down 'org-timestamp-up))
      (org-metadown)))
+
 
  (evil-define-key 'normal org-mode-map
    "-" 'user-function/org-minus
+   "_" 'user-function/org-shift-minus
    "+" 'user-function/org-plus
    (kbd "RET") 'user-function/org-return
+   (kbd "<S-return>") 'user-function/org-shift-return
    "[[" 'outline-previous-visible-heading
    "]]" 'outline-next-visible-heading
    "<" 'user-function/org-arrow-left
@@ -109,7 +115,21 @@
  (spacemacs/set-leader-keys-for-major-mode 'org-mode
    "T" nil
 
-   "o"  'org-meta-return
+   "H" nil
+   "J" nil
+   "K" nil
+   "L" nil
+
+   "h" nil
+   "l" nil ; 默认的就是org-open-at-point
+
+   "C-S-l" nil
+   "C-S-h" nil
+   "C-S-j" nil
+   "C-S-k" nil
+
+   "S" nil ; 默认是标题树操作
+
    "tr" '(lambda () (interactive) (org-table-recalculate 'all))
    "t+" 'org-table-sum
 
@@ -118,11 +138,9 @@
    "Tl" 'org-toggle-link-display
    "Tt" 'org-show-todo-tree
 
-   "-" 'user-function/org-mleader-minus
    "," 'user-function/org-ctrl-c-ctrl-c
    "it" '(lambda () (interactive) (org-time-stamp nil))
-   "iT" '(lambda () (interactive) (org-time-stamp t)))
-
-;; 截屏
-(spacemacs/set-leader-keys-for-major-mode 'org-mode "is" 'user-function/org-screenshot)
+   "iT" '(lambda () (interactive) (org-time-stamp t))
+   ;; 截屏
+   "is" 'user-function/org-screenshot)
 

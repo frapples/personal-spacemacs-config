@@ -39,18 +39,24 @@
   (user-function/org-at-p '(timestamp)))
 
 
-;; 模仿org-insert-heading-after-current
-(defun user-function/org-insert-todo-heading-after-current ()
+;; 参考org-insert-heading-after-current
+(defun user-function/org-insert-heading (&optional todop pos)
+  "todop is t or nil, pos is 'after or 'before"
   (interactive)
   (org-back-to-heading)
-  (org-insert-todo-heading nil)
-  (org-move-subtree-down)
-  (end-of-line 1))
+  (beginning-of-line)
+  (if todop
+      (org-insert-todo-heading nil)
+    (org-insert-heading))
+  (if (not (eq pos 'before))
+      (org-move-subtree-down)))
 
-(defun user-function/org-insert-item-after-current (&optional checkbox)
+(defun user-function/org-insert-item (&optional checkbox pos)
   (interactive)
+  (beginning-of-line)
   (org-insert-item checkbox)
-  (org-move-item-down))
+  (if (not (eq pos 'before))
+      (org-move-item-down)))
 
 
 (defun user-function/org-toggle-statistics-cookies ()
