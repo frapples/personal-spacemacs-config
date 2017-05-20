@@ -49,8 +49,16 @@
   (define-key org-agenda-mode-map (kbd "-") 'org-agenda-todo)
   (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode (kbd "-") 'org-agenda-priority-down)
 
+  (define-key org-agenda-mode-map (kbd "RET") 'org-agenda-goto)
+
+  ;; 不能写成 (kbd "TAB") ，因为这无法冲掉已经存在的表项
+  (define-key org-agenda-mode-map [(tab)]
+    (lambda ()
+      (interactive)
+      (user-function/do-and-keep-window (lambda () (org-agenda-goto t)))))
 
   (define-key org-agenda-mode-map (kbd "P") 'org-pomodoro))
+
 
 
 (with-eval-after-load 'org
@@ -63,7 +71,7 @@
     (kbd "T") 'org-todo-list
     ))
 
-(with-eval-after-load 'org-capture
-  (spacemacs/set-leader-keys-for-minor-mode 'org-capture-mode
-    "q" 'org-capture-finalize
-    "Q" 'org-capture-kill))
+(spacemacs/set-leader-keys-for-minor-mode 'org-capture-mode
+  "q" 'org-capture-finalize
+  "Q" 'org-capture-kill
+  "k" 'org-capture-kill)
