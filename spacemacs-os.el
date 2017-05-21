@@ -2,7 +2,7 @@
   ;; (if (spacemacs/system-is-linux)
   ;;     (user-config/exwm))
 
-  (user-config/input-method)
+  ;; (user-config/input-method)
   ;; (user-config/emms)
     )
 

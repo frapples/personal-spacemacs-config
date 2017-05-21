@@ -112,14 +112,14 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
 
    ;; 自己需要安装的额外的插件。
-   dotspacemacs-additional-packages '(emms chinese-word-at-point) ;emacs-vim-modeline
+   dotspacemacs-additional-packages '() ;emacs-vim-modeline
    ;; A list of packages and/or extensions that will not be install and loaded.
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(evil-org)
+   dotspacemacs-excluded-packages '(evil-org chinese-pyim)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
