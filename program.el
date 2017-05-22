@@ -6,7 +6,20 @@
   (user-config/imenu)
 
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode))
+  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
+
+  ;; https://emacs.stackexchange.com/questions/30082/your-python-shell-interpreter-doesn-t-seem-to-support-readline
+  (with-eval-after-load 'python
+    (defun python-shell-completion-native-try ()
+      "Return non-nil if can trigger native completion."
+      (let ((python-shell-completion-native-enable t)
+            (python-shell-completion-native-output-timeout
+             python-shell-completion-native-try-output-timeout))
+        (python-shell-completion-native-get-completions
+         (get-buffer-process (current-buffer))
+         nil "_"))))
+
+  )
 
 (defun user-config/programing-base ()
   (setq c-basic-offset 4)
@@ -36,9 +49,10 @@
 
   ;; https://github.com/proofit404/anaconda-mode/issues/62
   (when (spacemacs/system-is-linux)
-    (setq python-shell-interpreter "/usr/bin/python3") ;; 似乎不行
+    (setq python-shell-interpreter "/usr/bin/python3")
     ;; 在那个文件夹里做了一个小小的软链接
-    (setenv "PATH" (concat "~/.spacemacs.d/others/spacemacs-bash-replace" ":" (getenv "PATH"))))
+    ;; (setenv "PATH" (concat "~/.spacemacs.d/others/spacemacs-bash-replace" ":" (getenv "PATH")))
+    )
 
   ;; 缩写补全 http://emacs.stackexchange.com/questions/2671/how-can-i-get-fuzzy-code-completion
   (with-eval-after-load 'company
@@ -112,3 +126,4 @@
     ;; 不行 那个函数要在被生成imenu的buffer里调用
     ;; (define-key imenu-list-major-mode-map (kbd "u") '(lambda () (interactive) (imenu-list-update)))
     ))
+
