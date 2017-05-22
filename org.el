@@ -97,6 +97,9 @@
 
 (defun user-config/org-agenda ()
 
+  ;; 归档路径配置，这个被我的layer扩展过
+  (setq org-archive-location "{org-path-noext}-archive/{year}/{year}-{month}.org")
+
   (defun user-function/org-query-gtd-active-project ()
     "自己是TODO项并且有TODO项的子节点"
     (and

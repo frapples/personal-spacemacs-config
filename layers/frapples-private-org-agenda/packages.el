@@ -28,6 +28,7 @@
 
   (setq org-archive-file-header-format "")
 
+  (setq org-archive-location "{org-path-noext}-archive/{year}/{year}-{month}.org")
   ;; https://stackoverflow.com/questions/10143959/keeping-the-context-when-archiving-in-emacs-org-mode
   (advice-add
    'org-archive-subtree
@@ -41,12 +42,23 @@
 
             ;; agenda里这个归档也有效，不是因为这里处理过，而且因为agenda用的另外一个函数包装了
             (filepath-noext (file-name-sans-extension (org-extract-archive-file "%s ::")))
+            (org-archive-location-ext org-archive-location)
+
+            (arg-alist (list (cons "year" (format "%d" (caddr date)))
+                             (cons "month" (format "%02d" (car date)))
+                             (cons "day" (format "%02d" (cadr date)))
+                             (cons "org-path-noext" filepath-noext)))
 
             ;; 利用动态作用域
-            (org-archive-location (concat filepath-noext "-archive/" (format "%d-%02d-%02d.org" (caddr date) (car date) (cadr date)))))
+            (org-archive-location
+             (replace-regexp-in-string
+              "{[a-zA-Z-]+}"
+              (lambda (match)
+                (setq match (substring match 1 (- (length match) 1)))
+                (assoc-default match arg-alist))
+              org-archive-location-ext)))
        (apply origin-function args)
        (org-save-all-org-buffers))))
-
   )
 
 (defun frapples-private-org-agenda/init-cal-china-x ()
