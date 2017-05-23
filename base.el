@@ -3,7 +3,6 @@
   (user-config/gui-frame)
   (user-config/chinese)
   (user-config/startify-home)
-  (user-config/theme)
   )
 
 
@@ -14,20 +13,6 @@
   ;; https://github.com/tumashu/chinese-pyim#%E7%89%B9%E7%82%B9  chinese-pyim提供的分词功能
   ;; (require 'chinese-pyim-company)
   (setq pyim-company-max-length 6))
-
-
-(defun user-config/theme ()
-  (require 'multi-theme)
-  (multi-theme-add-timely-theme "6:00" "17:00" 'sanityinc-solarized-light)
-  (multi-theme-add-timely-theme "00:00" "6:00" 'monokai)
-  (multi-theme-add-timely-theme "17:00" "23:59" 'monokai)
-
-  (setq-default dotspacemacs-themes
-                (multi-theme-themes
-                 '(sanityinc-solarized-dark
-                   monokai
-                   leuven              ; 文档上说这个主题对org的支持出奇的好
-                   ))))
 
 
 (defun user-config/gui-frame ()

@@ -188,18 +188,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   ;; 注：加sanityic的solarized主题在org模式里表现的比不加的要好
-   dotspacemacs-themes '(
-                         spacemacs-dark
-                         sanityinc-solarized-light
-                         sanityinc-solarized-dark
-                         monokai
-                         ;; solarized-light
-                         ;; solarized-dark
-                         ;; spacemacs-light
-                         ;; spacemacs-dark
-                         leuven ; 文档上说这个主题对org的支持出奇的好
-                         )
+   dotspacemacs-themes (user-config/theme)
+
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -355,6 +345,25 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
+(defun user-config/theme ()
+  (add-to-list 'load-path "~/.spacemacs.d/user-plugin/")
+  (require 'multi-theme)
+  (multi-theme-add-timely-theme "6:00" "17:00" 'sanityinc-solarized-light)
+  (multi-theme-add-timely-theme "00:00" "6:00" 'monokai)
+  (multi-theme-add-timely-theme "17:00" "23:59" 'monokai)
+  (multi-theme-themes
+   '(sanityinc-solarized-dark
+     monokai
+     leuven                            ; 文档上说这个主题对org的支持出奇的好
+     ;; 注：加sanityic的solarized主题在org模式里表现的比不加的要好
+     ;;   spacemacs-dark
+     ;;   sanityinc-solarized-light
+     ;;   sanityinc-solarized-dark
+     ;;   solarized-light
+     ;;   solarized-dark
+     ;;   spacemacs-light
+     ;;   spacemacs-dark
+     )))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
