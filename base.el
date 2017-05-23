@@ -18,8 +18,9 @@
 
 (defun user-config/theme ()
   (require 'multi-theme)
-  (multi-theme-set-timely-themes '(("6:00" . sanityinc-solarized-light)
-                              ("17:00" . monokai)))
+  (multi-theme-add-timely-theme "6:00" "17:00" 'sanityinc-solarized-light)
+  (multi-theme-add-timely-theme "00:00" "6:00" 'monokai)
+  (multi-theme-add-timely-theme "17:00" "23:59" 'monokai)
 
   (setq-default dotspacemacs-themes
                 (multi-theme-themes
