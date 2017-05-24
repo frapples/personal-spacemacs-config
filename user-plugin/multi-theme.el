@@ -37,8 +37,12 @@
          (unless theme
            (setq theme multi-theme-default-theme))
          (let ((timer
-                (run-at-time (message "%04d" time) (* 60 60 24) 'spacemacs/load-theme theme)))
+                (run-at-time (multi-theme-time-to-string time) (* 60 60 24) 'spacemacs/load-theme theme)))
            (push timer multi-theme--timer)))))))
+
+(defun multi-theme-time-to-string (time)
+  (let ((hhmm (format "%04d" time)))
+    (concat (substring hhmm 0 2) ":" (substring hhmm 2 4))))
 
 (defun multi-theme--search-in-sorted-table (table find &optional key-func)
   "在一个有序的表中，搜索find应该插入的前面元素。如无，返回nil"
@@ -69,7 +73,12 @@
   (delete-dups
    (append
     (list (multi-theme-current))
-    (mapcar 'cdr multi-theme--config-table)
+    (mapcar
+     (lambda (it)
+       (if (cdr it)
+           (cdr it)
+         multi-theme-default-theme))
+     multi-theme--config-table)
     other-themes)))
 
 
