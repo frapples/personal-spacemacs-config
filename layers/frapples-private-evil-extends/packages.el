@@ -17,8 +17,23 @@
     evil-cleverparens
     eyebrowse
     ranger
+
+    ;; gtags等层依赖这个helm
+    helm
     ))
 
+;; https://github.com/syl20bnr/spacemacs/issues/7713
+;; https://github.com/syl20bnr/spacemacs/issues/6121
+;; 部分层的功能依赖helm
+(defun frapples-private-evil-extends/init-helm ()
+  (use-package helm
+    :defer 1
+    :init
+    :config
+    (progn
+      (helm-mode)
+      (with-eval-after-load 'helm-mode ; required
+        (spacemacs|hide-lighter helm-mode)))))
 
 (defun frapples-private-evil-extends/init-evil-find-char-pinyin ()
   (use-package evil-find-char-pinyin)
