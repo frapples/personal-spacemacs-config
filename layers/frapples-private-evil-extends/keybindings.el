@@ -5,6 +5,7 @@
 
 (spacemacs/set-leader-keys "bc" 'spacemacs/kill-this-buffer)
 (define-key evil-normal-state-map "gp" 'user-function/evil-paste-after-from-register-0)
+(define-key evil-normal-state-map "gl" 'evil-avy-goto-line)
 (define-key evil-motion-state-map (kbd "g b") 'ace-jump-buffer)
 (global-set-key [f11] 'spacemacs/toggle-fullscreen-frame)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)

@@ -29,8 +29,19 @@
   (dolist (mode '(c-mode c++-mode))
     (spacemacs/set-leader-keys-for-major-mode mode "=" 'clang-format-buffer))
 
-  (setq flycheck-clang-args "-std=c99")
-  (setq flycheck-gcc-args "-std=c99")
+  ;; https://stackoverflow.com/questions/30949847/configuring-flycheck-to-work-with-c11
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              (setq flycheck-clang-language-standard "c++11")
+              (setq flycheck-gcc-language-standard "c++11")))
+
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (setq flycheck-clang-language-standard "c99")
+              (setq flycheck-gcc-language-standard "c99")))
+
+  ;; (setq flycheck-clang-args "-std=c99")
+  ;; (setq flycheck-gcc-args "-std=c99")
 
   ;; (evil-define-key 'insert web-mode-map (kbd "TAB") 'emmet-expand-yas)
   ;; (define-key evil-insert-state-map (kbd "TAB") 'user-config/tab-indent-or-complete)
