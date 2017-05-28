@@ -1,0 +1,9 @@
+#name : #ifndef XXX-random; #define XXX-random; #endif
+# key: once-rand
+# --
+#ifndef ${1:__`(upcase (file-name-nondirectory (file-name-sans-extension (buffer-file-name))))`_H__RAND`(format "%d%d" (abs (random)) (abs (random)))`}
+#define $1
+
+$0
+
+#endif /* $1 */

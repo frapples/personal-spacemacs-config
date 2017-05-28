@@ -3,6 +3,8 @@
   (user-config/gui-frame)
   (user-config/chinese)
   (user-config/startify-home)
+
+  (setq enable-local-eval t)
   )
 
 
