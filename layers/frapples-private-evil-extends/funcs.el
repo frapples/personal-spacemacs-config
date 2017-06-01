@@ -1,19 +1,3 @@
-
-
-(defun user-function/unique-file-path (prefix)
-  (let ((filename
-         (concat (file-name-base (buffer-file-name)) "/"
-                 prefix "_"
-                 (format-time-string "%Y-%m-%d_%H-%M-%S")
-                 ".png")))
-
-    (unless (file-exists-p (file-name-directory filename))
-      (make-directory (file-name-directory filename)))
-    filename))
-
-
-
-
 ;; 使用eyebrowse实现vim的tab概念
 (defun user-function/eyebrowse-update-frame-title ()
   "更新GUI的标题栏，将其显示为eyebrowse的页签名称以模拟tab栏"

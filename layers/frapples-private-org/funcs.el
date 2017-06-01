@@ -122,7 +122,7 @@ same directory as the org-buffer and insert a link to this file."
   (interactive)
   (org-display-inline-images)
 
-  (setq filename (user-function/unique-file-path "screenshot"))
+  (setq filename (user-function/unique-file-path "screenshot" ".png"))
 
 
   ;; take screenshot
@@ -144,3 +144,30 @@ same directory as the org-buffer and insert a link to this file."
           (delete-file filename)
           (undo-tree-undo))))
   )
+
+
+(defun user-function/org-note-asset-dir (path &optional relative)
+  "我们约定，xxx.org的文件放在同级的xxx文件夹下"
+  (let* ((dir (file-name-directory path))
+         (file-name (file-name-base path)))
+    (if relative
+        (concat file-name "/")
+      (concat dir file-name "/"))))
+
+(defun user-function/org-note-asset-file-path (file-name)
+  (concat (user-function/org-note-asset-dir (buffer-file-name) t) file-name))
+
+(defun user-function/org-note-asset-rename-content-update (old-dir new-dir)
+  "asset目录改变，更新org内容中的对应部分"
+  (setq old-dir (file-name-as-directory old-dir))
+  (setq new-dir (file-name-as-directory new-dir))
+  (save-excursion
+    (let ((regexp (format
+                   "\\[\\[%s%s\\([^:]*\\)\\]\\]"
+                   (regexp-opt '("file:" ""))
+                   (regexp-quote old-dir))))
+      (goto-char (point-min))
+      (while (re-search-forward regexp nil t)
+        (replace-match
+         (save-match-data
+           (format "[[file:%s%s]]" new-dir (match-string 1))))))))

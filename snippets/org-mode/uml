@@ -3,9 +3,8 @@
 # key: uml-
 # --
 
-#+BEGIN_SRC plantuml :file `(user-function/ensure-orgfile-image-dir)`/${1:file}.png :cmdline -charset UTF-8 :exports none :results silent
+#+BEGIN_SRC plantuml :file (user-function/org-note-asset-file-path "${1:uml-`(user-function/make-file-name-by-time)`}.png") :cmdline -charset UTF-8 :exports results :results output replace
 @startuml
 $0
 @enduml
 #+END_SRC
-[[file:`(user-function/ensure-orgfile-image-dir)`/$1.png]]

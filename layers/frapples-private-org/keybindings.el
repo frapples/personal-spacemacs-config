@@ -82,6 +82,20 @@
                                'org-timestamp-down 'org-timestamp-up))
      (org-metadown)))
 
+(defun user-function/org-note-rename ()
+  (interactive)
+  (let* ((path (buffer-file-name))
+         (dir (file-name-directory path))
+         (assert-dir (user-function/org-note-asset-dir path t))
+         (new-path (read-file-name "New name:" dir))
+         (new-assert-dir (user-function/org-note-asset-dir new-path t)))
+    (if (or (file-exists-p new-path) (file-exists-p (expand-file-name new-assert-dir dir)))
+        (message "新名称已存在！换一个吧。")
+        (progn
+          (spacemacs/rename-file path new-path)
+          (rename-file (expand-file-name assert-dir dir) (expand-file-name new-assert-dir dir))
+          (user-function/org-note-asset-rename-content-update assert-dir new-assert-dir)
+          (save-buffer)))))
 
  (evil-define-key 'normal org-mode-map
    "-" 'user-function/org-minus
@@ -142,5 +156,8 @@
    "it" '(lambda () (interactive) (org-time-stamp nil))
    "iT" '(lambda () (interactive) (org-time-stamp t))
    ;; 截屏
-   "is" 'user-function/org-screenshot)
+   "is" 'user-function/org-screenshot
+
+   "r" 'user-function/org-note-rename
+   )
 

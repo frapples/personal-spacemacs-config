@@ -3,7 +3,6 @@
 # key: dot-
 # --
 
-#+BEGIN_SRC dot :file `(user-function/ensure-orgfile-image-dir)`/${1:file}.png :cmdline -T${2:png} :exports none :results silent
+#+BEGIN_SRC dot :file (user-function/org-note-asset-file-path "${1:dot-`(user-function/make-file-name-by-time)`}.png") :cmdline -T${2:png} :exports results :results output replace
 $0
 #+END_SRC
-[[file:`(user-function/ensure-orgfile-image-dir)`/$1.png]]
