@@ -13,6 +13,7 @@
     avy
     (avy :location elpa)
 
+    pangu-spacing
     evil-visual-mark-mode
     evil-cleverparens
     eyebrowse
@@ -77,3 +78,10 @@
   ;; 修复ranger的一个问题
   ;; https://emacs-china.org/t/ranger-void-variable-bookmark-list-ranger-pre-header-format/2179
   (require 'bookmark))
+
+(defun chinese/post-init-pangu-spacing ()
+  ;; 把chinese的这个设置关掉，有bug：https://github.com/coldnew/pangu-spacing/issues/23
+  (add-hook 'org-mode-hook
+            '(lambda ()
+               (set (make-local-variable 'pangu-spacing-real-insert-separtor) nil))
+            t))
