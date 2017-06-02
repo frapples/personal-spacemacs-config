@@ -1,27 +1,16 @@
 
 (defun user-config/program ()
-  (user-config/programing-base)
+  (user-config/c-c++)
+  (user-config/python)
   (user-config/helm-dash)
-  (user-config/snippets)
   (user-config/imenu)
+  (user-config/ugly-patch)
 
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
-
-  ;; https://emacs.stackexchange.com/questions/30082/your-python-shell-interpreter-doesn-t-seem-to-support-readline
-  (with-eval-after-load 'python
-    (defun python-shell-completion-native-try ()
-      "Return non-nil if can trigger native completion."
-      (let ((python-shell-completion-native-enable t)
-            (python-shell-completion-native-output-timeout
-             python-shell-completion-native-try-output-timeout))
-        (python-shell-completion-native-get-completions
-         (get-buffer-process (current-buffer))
-         nil "_"))))
-
   )
 
-(defun user-config/programing-base ()
+(defun user-config/c-c++ ()
   (setq c-basic-offset 4)
   (setq c++-basic-offset 4)
   (setq clang-format-executable "clang-format-3.8")
@@ -40,13 +29,11 @@
               (setq flycheck-clang-language-standard "c99")
               (setq flycheck-gcc-language-standard "c99")))
 
-  ;; (setq flycheck-clang-args "-std=c99")
-  ;; (setq flycheck-gcc-args "-std=c99")
-
   (dolist (mode '(c-mode c++-mode))
-    (spacemacs/set-leader-keys-for-major-mode mode "c" 'user-config/c-cpp-simple-compile))
+    (spacemacs/set-leader-keys-for-major-mode mode "c" 'user-function/c-cpp-simple-compile))
+  )
 
-
+(defun user-config/python ()
   ;; https://github.com/proofit404/anaconda-mode/issues/62
   (when (spacemacs/system-is-linux)
     (setq python-shell-interpreter "/usr/bin/python3")
@@ -62,18 +49,6 @@
   (setq flycheck-python-pylint-executable "pylint-off")
   )
 
-(defun user-config/c-cpp-simple-compile ()
-  (interactive)
-  ;; TODO
-  (let ((filename (buffer-file-name (current-buffer))))
-    (compile
-     (format "%s \"%s\" -o \"%s\" -g"
-             (if (string= (file-name-extension filename) "c") "gcc" "g++")
-             filename
-             (concat
-              (file-name-directory filename)
-              (file-name-base filename)
-              (if (spacemacs/system-is-mswindows) ".exe" ".out"))))))
 
 (defun user-config/helm-dash ()
   (let (path)
@@ -97,3 +72,28 @@
     ;; (define-key imenu-list-major-mode-map (kbd "u") '(lambda () (interactive) (imenu-list-update)))
     ))
 
+(defun user-config/ugly-patch ()
+  ;; https://emacs.stackexchange.com/questions/30082/your-python-shell-interpreter-doesn-t-seem-to-support-readline
+  (with-eval-after-load 'python
+    (defun python-shell-completion-native-try ()
+      "Return non-nil if can trigger native completion."
+      (let ((python-shell-completion-native-enable t)
+            (python-shell-completion-native-output-timeout
+             python-shell-completion-native-try-output-timeout))
+        (python-shell-completion-native-get-completions
+         (get-buffer-process (current-buffer))
+         nil "_")))))
+
+
+(defun user-function/c-cpp-simple-compile ()
+  (interactive)
+  ;; TODO
+  (let ((filename (buffer-file-name (current-buffer))))
+    (compile
+     (format "%s \"%s\" -o \"%s\" -g"
+             (if (string= (file-name-extension filename) "c") "gcc" "g++")
+             filename
+             (concat
+              (file-name-directory filename)
+              (file-name-base filename)
+              (if (spacemacs/system-is-mswindows) ".exe" ".out"))))))
