@@ -43,17 +43,6 @@
   ;; (setq flycheck-clang-args "-std=c99")
   ;; (setq flycheck-gcc-args "-std=c99")
 
-  ;; (evil-define-key 'insert web-mode-map (kbd "TAB") 'emmet-expand-yas)
-  ;; (define-key evil-insert-state-map (kbd "TAB") 'user-config/tab-indent-or-complete)
-  ;; (dolist (mode-map '(c-mode-map c++-mode-map python-mode-map))
-  ;;   (evil-define-key 'insert mode-map (kbd "TAB") 'user-config/tab-indent-or-complete))
-  (add-hook 'c-mode-hook '(lambda () (evil-define-key 'insert c-mode-map (kbd "TAB") 'user-config/tab-indent-or-complete)))
-  (add-hook 'c++-mode-hook '(lambda () (evil-define-key 'insert c++-mode-map (kbd "TAB") 'user-config/tab-indent-or-complete)))
-  (add-hook 'python-mode-hook '(lambda () (evil-define-key 'insert python-mode-map (kbd "TAB") 'user-config/tab-indent-or-complete)))
-  (add-hook 'org-mode-hook '(lambda () (evil-define-key 'insert org-mode-map (kbd "TAB") 'user-config/tab-indent-or-complete)))
-  (define-key evil-insert-state-map (kbd "C-j") 'user-function/do-yas-expand)
-
-
   (dolist (mode '(c-mode c++-mode))
     (spacemacs/set-leader-keys-for-major-mode mode "c" 'user-config/c-cpp-simple-compile))
 
@@ -97,36 +86,6 @@
           helm-dash-docset-newpath path))
 
   (setq helm-dash-browser-func 'eww))
-
-(defun user-config/snippets ()
-  ;; (add-to-list 'yas-snippet-dirs "~/.spacemacs.d/yasnippet-vim-snippets/snippets")
-  )
-
-(defun user-config/tab-indent-or-complete ()
-  (interactive)
-  (if (minibufferp)
-      (minibuffer-complete)
-    (if (or (not yas/minor-mode)
-            (null (user-function/do-yas-expand)))
-        (if (user-function//check-expansion)
-            (company-complete-common)
-          (indent-for-tab-command)))))
-
-(defun user-function//check-expansion ()
-  (save-excursion
-    (if (looking-at "\\_>") t
-      (backward-char 1)
-      (if (looking-at "\\.") t
-        (backward-char 1)
-        (if (looking-at "->") t nil)))))
-
-(defun user-function/do-yas-expand ()
-  (interactive)
-  (let ((yas/fallback-behavior 'return-nil))
-    ;; (yas/expand)
-    (yas-expand)))
-
-
 
 (defun user-config/imenu ()
   (with-eval-after-load 'imenu-list

@@ -119,7 +119,11 @@ values."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(evil-org chinese-pyim)
+   dotspacemacs-excluded-packages '(evil-org
+                                    chinese-pyim
+                                    evil-tutor ; 要这个干嘛？
+                                    evil-escape ; fd相当于ESC，没什么用
+                                    )
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -409,9 +413,7 @@ you should place you code here."
   (user-config/base) ; 基础配置
   (user-config/org) ; org 配置
   (user-config/program) ; 编程配置
-  (user-config/spacemacs-os) ; 很强势，和spacemacs os相关的配置
   (user-config/app) ;emacs里面跑的应用设置
-
   )
 
 
