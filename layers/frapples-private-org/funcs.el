@@ -122,17 +122,16 @@ same directory as the org-buffer and insert a link to this file."
   (interactive)
   (org-display-inline-images)
 
-  (setq filename (user-function/unique-file-path "screenshot" ".png"))
+  (setq filename
+        (concat (user-function/ensure-dir (user-function/org-note-asset-dir (buffer-file-name)))
+                "screenshot-" (user-function/make-file-name-by-time) ".png"))
 
-
-  ;; take screenshot
-  (when (eq system-type 'darwin)
-    (call-process-shell-command "screencapture" nil nil nil nil " -s " (concat "\"" filename "\"" ))
-    (call-process-shell-command "convert" nil nil nil nil (concat "\"" filename "\" -resize  \"50%\"" ) (concat "\"" filename "\"" )))
-
-  (when (eq system-type 'gnu/linux)
-    (call-process "import" nil nil nil filename))
-
+  ;; 截图
+  (cond ((eq system-type 'darwin)
+         (call-process-shell-command "screencapture" nil nil nil nil " -s " (concat "\"" filename "\"" ))
+         (call-process-shell-command "convert" nil nil nil nil (concat "\"" filename "\" -resize  \"50%\"" ) (concat "\"" filename "\"" )))
+        ((eq system-type 'gnu/linux)
+         (call-process "import" nil nil nil filename)))
 
   (if (file-exists-p filename)
       (progn
@@ -142,8 +141,7 @@ same directory as the org-buffer and insert a link to this file."
         ;; 确认是否使用
         (when (string= (read-string "确认使用这张截图吗？(y/n)") "n")
           (delete-file filename)
-          (undo-tree-undo))))
-  )
+          (undo-tree-undo)))))
 
 
 (defun user-function/org-note-asset-dir (path &optional relative)
@@ -155,6 +153,7 @@ same directory as the org-buffer and insert a link to this file."
       (concat dir file-name "/"))))
 
 (defun user-function/org-note-asset-file-path (file-name)
+  (user-function/ensure-dir (user-function/org-note-asset-dir (buffer-file-name)))
   (concat (user-function/org-note-asset-dir (buffer-file-name) t) file-name))
 
 (defun user-function/org-note-asset-rename-content-update (old-dir new-dir)

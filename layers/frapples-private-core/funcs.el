@@ -70,21 +70,5 @@
     (mkdir file-path))
   file-path)
 
-(defun user-function/ensure-orgfile-image-dir ()
-  (user-function/ensure-dir (file-name-base (buffer-file-name))))
-
-
-(defun user-function/unique-file-path (prefix &optional ext)
-  (let ((filename
-         (concat (file-name-base (buffer-file-name)) "/"
-                 prefix "-"
-                 (user-function/make-file-name-by-time)
-                 (if ext ext ""))))
-
-    (unless (file-exists-p (file-name-directory filename))
-      (make-directory (file-name-directory filename)))
-    filename))
-
-
 (defun user-function/make-file-name-by-time ()
   (format-time-string "%Y%m%d-%H%M%S"))
