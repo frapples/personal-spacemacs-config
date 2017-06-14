@@ -161,3 +161,9 @@
    "r" 'user-function/org-note-rename
    )
 
+
+(spacemacs/set-leader-keys "an" nil)
+(spacemacs/declare-prefix "an" "notes")
+(spacemacs/set-leader-keys
+  "ans" 'deft
+  "anf" (lambda () (interactive) (projectile-find-file-in-directory deft-directory)))

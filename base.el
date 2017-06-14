@@ -37,7 +37,7 @@
      (if (not (spacemacs/system-is-mswindows))
          (if (string= (getenv "USER") "chromebook")
              '(:en-font "DeJaVu sans mono" :zh-font "文泉驿等宽微米黑" :en-size 14 :zh-size 16)
-           '(:en-font "Consolas" :zh-font "文泉驿等宽微米黑" :en-size 14 :zh-size 16))
+           '(:en-font "DeJaVu sans mono" :zh-font "文泉驿等宽微米黑" :en-size 14 :zh-size 16))
        '(:en-font "Consolas" :zh-font "微软雅黑"  :en-size 14 :zh-size 16))))
   )
 
