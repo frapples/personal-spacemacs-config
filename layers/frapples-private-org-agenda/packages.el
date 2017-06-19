@@ -147,11 +147,17 @@
 
 (defun frapples-private-org-agenda/post-init-org-pomodoro ()
   (add-hook 'org-pomodoro-finished-hook
-            '(lambda () (user-function/notification "Pomodoro完成！休息一会儿吧！") (message "Pomodoro完成，休息一会儿吧！")))
+            (lambda ()
+              (user-function/notification "Pomodoro" "完成！休息一会儿吧！")
+              (message "Pomodoro完成，休息一会儿吧！")))
   (add-hook 'org-pomodoro-short-break-finished-hook
-            '(lambda () (user-function/notification "Short Break，继续？") (message "Short Break，继续？")))
+            (lambda ()
+              (user-function/notification "Pomodoro" "Short Break，继续？")
+              (message "Short Break，继续？")))
   (add-hook 'org-pomodoro-long-break-finished-hook
-            '(lambda () (user-function/notification "Long Break，继续？") (message "Long Break，继续？")))
+            (lambda ()
+              (user-function/notification "Pomodoro" "Long Break，继续？")
+              (message "Long Break，继续？")))
 
   ;; (setq org-pomodoro-audio-player "mplayer") ; 默认是aplay或afplay
   ;; (setq org-pomodoro-finished-sound-args "-volume 0.3")

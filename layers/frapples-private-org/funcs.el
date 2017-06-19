@@ -102,16 +102,15 @@
           (plist-put cookie :type (if (eq (string-match-p "%" (plist-get cookie :value)) nil) '/ '%))
         cookie))))
 
-(defun user-function/notification (message)
+(defun user-function/notification (title message)
   "Send a notification"
   (when (spacemacs/system-is-linux)
-    ; shell-command函数也行
-    (if (executable-find "gnome-osd-client")
-      (call-process "gnome-osd-client" nil nil nil
-        "-f" (format "<message id=\"emacs\" osd_fake_translucent_bg=\"off\" animations=\"off\" hide_timeout=\"60000\"> \n
-                  <span foreground=\"yellow\">%s</span></message>"
-                        message))
-      (message "请先安装gnome-osd！"))))
+    (require 'notifications)
+    (notifications-notify
+       :title title
+       :body message
+       :app-icon (concat spacemacs-assets-directory "spacemacs.svg")
+       :urgency 'low)))
 
 
 
