@@ -13,7 +13,7 @@
 
 ;; 普通模式的ESC取消搜索的高亮
 (define-key evil-normal-state-map
-  [escape] '(lambda () (interactive) (evil-search-highlight-persist-remove-all) (evil-normal-state)))
+  [escape] '(lambda () (interactive) (spacemacs/evil-search-clear-highlight) (evil-normal-state)))
 
 (spacemacs/set-leader-keys
   "fCe" 'set-buffer-file-coding-system
