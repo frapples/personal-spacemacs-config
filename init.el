@@ -48,6 +48,7 @@ values."
      (ranger :variables
              ranger-show-preview t)
      (ibuffer :variables ibuffer-group-buffers-by 'modes) ; projects有点卡
+     fasd
 
 
      ;; 编程辅助工具
@@ -307,7 +308,7 @@ values."
    ;; If non nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
-   dotspacemacs-mode-line-unicode-symbols nil
+   dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
@@ -377,6 +378,8 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
+  ;; https://emacs-china.org/t/emacs-25-1-init-el-custom/1262/11
+  (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
 
   ;; (toggle-frame-maximized)
   ;; 对PATH和MANPATH的设置，如果放在.bashrc里面只能被交互式的shell识别。
