@@ -36,8 +36,15 @@
         (`(,time . ,theme)
          (unless theme
            (setq theme multi-theme-default-theme))
-         (let ((timer
-                (run-at-time (multi-theme-time-to-string time) (* 60 60 24) 'spacemacs/load-theme theme)))
+         (let* ((load-theme-func
+                (lambda (theme time)
+                  (let ((diff (abs  (- (diary-entry-time (format-time-string "%H:%M")) time))))
+                    ;; 解决以下问题：初始设置时，emacs会将时间早已经过了的timer运行一遍
+                    (when (< diff 2)
+                      ;; 参考spacemacs/cycle-spacemacs-theme函数，不加'disable有时会加载出问题
+                      (spaceamcs/load-theme theme nil 'disable)))))
+               (timer
+                (run-at-time (multi-theme-time-to-string time) (* 60 60 24) load-theme-func theme time)))
            (push timer multi-theme--timer)))))))
 
 (defun multi-theme-time-to-string (time)
