@@ -79,7 +79,7 @@
   ;; https://emacs-china.org/t/ranger-void-variable-bookmark-list-ranger-pre-header-format/2179
   (require 'bookmark))
 
-(defun chinese/post-init-pangu-spacing ()
+(defun frapples-private-evil-extends/post-init-pangu-spacing ()
   ;; 把chinese的这个设置关掉，有bug：https://github.com/coldnew/pangu-spacing/issues/23
   (add-hook 'org-mode-hook
             '(lambda ()
