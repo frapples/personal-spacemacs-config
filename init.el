@@ -74,6 +74,7 @@ values."
      python
      html
      javascript
+     react
      sql
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode

@@ -8,6 +8,7 @@
 
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
+
   )
 
 (defun user-config/c-c++ ()
