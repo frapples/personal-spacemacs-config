@@ -38,7 +38,9 @@
            (setq theme multi-theme-default-theme))
          (let* ((load-theme-func
                 (lambda (theme time)
-                  (let ((diff (abs  (- (diary-entry-time (format-time-string "%H:%M")) time))))
+                  (let ((diff (abs
+                               (- (multi-theme-time-to-seconds (diary-entry-time (format-time-string "%H:%M")))
+                                (multi-theme-time-to-seconds time)))))
                     ;; 解决以下问题：初始设置时，emacs会将时间早已经过了的timer运行一遍
                     (when (< diff 2)
                       ;; 参考spacemacs/cycle-spacemacs-theme函数，不加'disable有时会加载出问题
@@ -50,6 +52,11 @@
 (defun multi-theme-time-to-string (time)
   (let ((hhmm (format "%04d" time)))
     (concat (substring hhmm 0 2) ":" (substring hhmm 2 4))))
+
+(defun multi-theme-time-to-seconds (time)
+  (let* ((h (/ time 100))
+         (m (- time (* h 100))))
+    (+ (* h 60 60) (* m 60))))
 
 (defun multi-theme--search-in-sorted-table (table find &optional key-func)
   "在一个有序的表中，搜索find应该插入的前面元素。如无，返回nil"
