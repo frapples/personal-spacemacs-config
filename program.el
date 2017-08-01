@@ -9,6 +9,12 @@
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
 
+  (require 'kotlin-mode)
+
+  (require 'flycheck-kotlin)
+  (add-hook 'kotlin-mode-hook 'flycheck-mode)
+
+
   )
 
 (defun user-config/c-c++ ()
