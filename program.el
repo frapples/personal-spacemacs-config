@@ -2,20 +2,13 @@
 (defun user-config/program ()
   (user-config/c-c++)
   (user-config/python)
+  (user-config/kotlin)
   (user-config/helm-dash)
   (user-config/imenu)
   (user-config/ugly-patch)
 
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
-
-  (require 'kotlin-mode)
-
-  (require 'flycheck-kotlin)
-  (add-hook 'kotlin-mode-hook 'flycheck-mode)
-
-
-  )
+  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode))
 
 (defun user-config/c-c++ ()
   (setq c-basic-offset 4)
@@ -56,6 +49,12 @@
   (setq flycheck-python-pylint-executable "pylint-off")
   )
 
+(defun user-config/kotlin ()
+  (require 'kotlin-mode)
+  (require 'flycheck-kotlin)
+  (add-hook 'kotlin-mode-hook 'flycheck-mode)
+
+  (setq kotlin-tab-width 4))
 
 (defun user-config/helm-dash ()
   (let (path)
