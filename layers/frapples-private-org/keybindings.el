@@ -165,5 +165,7 @@
 (spacemacs/set-leader-keys "an" nil)
 (spacemacs/declare-prefix "an" "notes")
 (spacemacs/set-leader-keys
-  "ans" 'deft
-  "anf" (lambda () (interactive) (projectile-find-file-in-directory deft-directory)))
+  "anS" 'deft
+  "anf" (lambda () (interactive) (projectile-find-file-in-directory deft-directory))
+  "ans" (lambda () (interactive)
+          (spacemacs/counsel-search '(list "ag" "pt" "ack" "grep") nil deft-directory)))
