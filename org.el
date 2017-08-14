@@ -112,81 +112,39 @@
   ;; 更多参考  https://github.com/remyhonig/org-query
     (setq org-agenda-custom-commands
           '(
-            ("n" "NEXT清单"
-             ((tags-todo "/+WAITING|+DEFERRED"
-                         ((org-agenda-overriding-header "任务清单（Waiting）：")
+            ("n" "TODO清单"
+             ((tags-todo "/+NEXT|+TODO"
+                         ((org-agenda-overriding-header "TODO清单：")
                           (org-tags-match-list-sublevels nil)
-                          (org-agenda-skip-function (org-query-select "headline" (not (org-query-gtd-project))))
+                          (org-agenda-skip-function
+                           (org-query-select "tree" (org-query-todo)))
                           (org-agenda-todo-ignore-scheduled t)
                           (org-agenda-todo-ignore-deadlines t)
                           (org-agenda-sorting-strategy
                            '(priority-down category-keep))
                           ))
 
-              ;; 激活项目的NEXT清单
-              (tags-todo "/+NEXT"
-                         ((org-agenda-overriding-header "任务清单（Next）：")
-                          (org-agenda-skip-function
-                           (org-query-select "headline"
-                                             (and
-                                              (org-query-parent (user-function/org-query-gtd-active-project))
-                                              (org-query-todo '("NEXT")))))
-                          (org-tags-match-list-sublevels t)
-                          (org-agenda-todo-ignore-scheduled 't)
-                          (org-agenda-todo-ignore-deadlines 't)
-                          (org-agenda-todo-ignore-with-date 't)
-                          (org-agenda-sorting-strategy
-                           '(priority-down todo-state-down effort-up category-keep))))
-
-              (tags-todo "/+TODO|+NEXT"
-                         ((org-agenda-overriding-header "简单任务清单（非项目）：")
-                          (org-agenda-skip-function
-                           (org-query-select "headline" (and (org-query-gtd-loose-task))))
-                          (org-agenda-todo-ignore-scheduled 't)
-                          (org-agenda-todo-ignore-deadlines 't)
-                          (org-agenda-todo-ignore-with-date 't)
-                          (org-agenda-sorting-strategy
-                           '(priority-down category-keep))))
-
-              ))
-
-
-            ;; 激活项目的
-            ("p" "GTD的项目清单（project）"
-             ((tags-todo "/+NEXT|+TODO"
-                         ((org-agenda-overriding-header "无NEXT任务的项目：")
+              (tags-todo "/+NEXT|+TODO|+WAITING|+DEFERRED"
+                         ((org-agenda-overriding-header "Waiting清单：")
+                          (org-tags-match-list-sublevels nil)
                           (org-agenda-skip-function
                            (org-query-select "tree"
-                                             (and (user-function/org-query-gtd-active-project)
-                                                  (not (org-query-child (org-query-todo '("NEXT" "WAITING")))))))
-                          (org-tags-match-list-sublevels 't)
+                                             (or (org-query-todo '("WAITING" "DEFERRED"))
+                                                 (and (org-query-todo)
+                                                      (org-query-child (org-query-todo '("WAITING" "DEFERRED")))))))
+                          (org-agenda-todo-ignore-scheduled t)
+                          (org-agenda-todo-ignore-deadlines t)
                           (org-agenda-sorting-strategy
-                           '(category-keep))))
+                           '(priority-down category-keep))
+                          ))))
 
-              (tags-todo "/+NEXT|+TODO"
-                         ((org-agenda-overriding-header "有NEXT任务的项目：")
-                          (org-agenda-skip-function
-                           (org-query-select "tree"
-                                             (and (user-function/org-query-gtd-active-project)
-                                                  (org-query-child (org-query-todo '("NEXT" "WAITING"))))))
-                          (org-tags-match-list-sublevels 't)
-                          (org-agenda-sorting-strategy
-                           '(category-keep))))
-
-              (tags-todo "/+WAITING"
-                         ((org-agenda-overriding-header "有WAITING任务的项目：")
-                          (org-agenda-skip-function (org-query-select "tree" (org-query-gtd-project)))
-                          (org-tags-match-list-sublevels 't)
-                          (org-agenda-sorting-strategy
-                           '(category-keep))))
-              ))
 
             ("k" "Maybe清单"
              ((tags "+MAYBE"
-                         ((org-agenda-overriding-header "将来也许(Maybe)清单：")
-                          (org-tags-match-list-sublevels 't)
-                          (org-agenda-sorting-strategy
-                           '(category-keep))))
+                    ((org-agenda-overriding-header "Maybe清单：")
+                     (org-tags-match-list-sublevels 'nil)
+                     (org-agenda-sorting-strategy
+                      '(category-keep))))
               ))
             ))
 

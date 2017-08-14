@@ -28,10 +28,8 @@
 
 (spacemacs/set-leader-keys
   "ao@" 'user-function/org-tags-view-with-@
-  "aoT" 'org-todo-list
   "aof" 'user-function/counsel-org-agenda-first-headings
   "aon" (lambda () (interactive) (org-agenda nil "n"))
-  "aoP" (lambda () (interactive) (org-agenda nil "p"))
   "aom" (lambda () (interactive) (org-agenda nil "k"))
 
 
