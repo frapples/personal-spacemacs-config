@@ -125,6 +125,8 @@ values."
                                     chinese-pyim
                                     evil-tutor ; 要这个干嘛？
                                     evil-escape ; fd相当于ESC，没什么用
+                                    pangu-spacing ; 造成许多问题
+
                                     )
 
    ;; Defines the behaviour of Spacemacs when installing packages.
