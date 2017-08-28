@@ -168,4 +168,5 @@
   "anS" 'deft
   "anf" (lambda () (interactive) (projectile-find-file-in-directory deft-directory))
   "ans" (lambda () (interactive)
-          (spacemacs/counsel-search '(list "ag" "pt" "ack" "grep") nil deft-directory)))
+          (spacemacs/counsel-search '(list "ag" "pt" "ack" "grep") nil deft-directory))
+  "anb" 'org-octopress)

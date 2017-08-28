@@ -6,6 +6,7 @@
 
     org-download
     deft
+    org-octopress
 
     ))
 
@@ -66,3 +67,108 @@
   (add-hook 'org-mode-hook '(lambda ()
                               (setq org-download-image-dir (file-name-base (buffer-name)))
                               (setq org-download-heading-lvl nil))))
+
+
+;; 抄的配置：http://www.tuicool.com/articles/reaUVzF
+(defun frapples-private-org/init-org-octopress ()
+  (use-package org-octopress
+    :config
+    (progn
+      (setq org-octopress-directory-top       "~/hexo-blog/source")
+      (setq org-octopress-directory-posts     "~/hexo-blog/source/_posts")
+      (setq org-octopress-directory-org-top   "~/hexo-blog/source")
+      (setq org-octopress-directory-org-posts "~/hexo-blog/source/_posts")
+      )
+
+    ;; rewrite in org-octopress.el
+    (defun org-octopress--summary-table (contents keymap) ;; 去掉 publish 这一列，因为 hexo 不需要
+      (let ((param (copy-ctbl:param ctbl:default-rendering-param)))
+        (ctbl:create-table-component-region
+         :param param
+         :width  nil
+         :height nil
+         :keymap keymap
+         :model
+         (make-ctbl:model
+          :data contents
+          :sort-state '(-1 2)
+          :column-model
+          (list (make-ctbl:cmodel
+                 :title "Date"
+                 :sorter 'ctbl:sort-string-lessp
+                 :min-width 10
+                 :align 'left)
+                (make-ctbl:cmodel
+                 :title "Category"
+                 :align 'left
+                 :sorter 'ctbl:sort-string-lessp)
+                (make-ctbl:cmodel
+                 :title "Title"
+                 :align 'left
+                 :min-width 40
+                 :max-width 140)
+                )))))
+
+    (defun org-octopress (&optional title)
+      "Org-mode and Octopress."
+      (interactive)
+      (setq org-octopress-summary-buffer (get-buffer-create "Octopress"))
+      (switch-to-buffer org-octopress-summary-buffer)
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (insert (org-octopress--summary-header title))
+      (save-excursion
+        (setq org-octopress-component (org-octopress--summary-table
+                                       (org-octopress--scan-post) org-octopress-summary-mode-map)))
+      (ctbl:cp-add-click-hook
+       org-octopress-component
+       (lambda ()
+         (find-file (nth 3 (ctbl:cp-get-selected-data-row org-octopress-component))))) ;; 这里的 4 改为 3，因为我修改了列数
+      (org-octopress-summary-mode)
+      (ctbl:navi-goto-cell
+       (ctbl:find-first-cell (ctbl:component-dest org-octopress-component)))
+      )
+
+    (define-key org-octopress-summary-mode-map "w" 'user-function/new-open-post)
+    (defun user-function/new-open-post ()
+      (interactive)
+      ;TODO
+      )
+
+    (defun org-octopress--scan-post ()
+      (mapcar
+       (lambda (filename)
+         (org-jekyll-property
+          '(:date
+            :jekyll-categories
+            :title
+            :input-file)
+          filename))
+       (directory-files
+        (expand-file-name
+         org-octopress-directory-org-posts) t "^.*\\.org$"))) ;; jekyll 要求所有文章以日期开头，而 hexo 不需要
+
+
+    ;; rewrite in ox-jekyll.el
+    (defcustom org-jekyll-date ""
+      "Default date used in Jekyll article."
+      :group 'org-export-jekyll
+      :type 'string)
+    (org-export-define-derived-backend 'jekyll 'html
+                                              ;; :export-block '("HTML" "JEKYLL")
+                                              :menu-entry
+                                              '(?j "Jekyll: export to HTML with YAML front matter."
+                                                   ((?H "As HTML buffer" org-jekyll-export-as-html)
+                                                    (?h "As HTML file" org-jekyll-export-to-html)))
+                                              :translate-alist
+                                              '((template . org-jekyll-template) ;; add YAML front matter.
+                                                (src-block . org-jekyll-src-block)
+                                                (inner-template . org-jekyll-inner-template)) ;; force body-only
+                                              :options-alist
+                                              '((:jekyll-layout "LAYOUT" nil org-jekyll-layout) ;; hexo-renderer-org 没有使用 JEKYLL 这个 prefix
+                                                (:jekyll-categories "CATEGORIES" nil org-jekyll-categories)
+                                                (:jekyll-tags "TAGS" nil org-jekyll-tags)
+                                                (:date "DATE" nil org-jekyll-date)
+                                                (:jekyll-published "PUBLISHED" nil org-jekyll-published)
+                                                (:jekyll-comments "COMMENTS" nil org-jekyll-comments)))
+    ))
