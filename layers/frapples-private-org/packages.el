@@ -5,10 +5,33 @@
     (org-ehtml :location elpa)
 
     org-download
-    deft
     org-octopress
 
+    (org-wiki :location (recipe :fetcher github :repo "caiorss/org-wiki"))
     ))
+
+(defun frapples-private-org/init-org-wiki ()
+  ;; 抄袭自： https://github.com/syl20bnr/spacemacs/pull/8447/files
+  (defun spacemacs/orgwiki-insert-asset-link ()
+    "Insert link [[file:<page>/<file>]] to asset file of current page at point.
++Insert an asset file of current page at point providing a Helm completion.
++Example: [[Linux/LinuxManual.pdf]]"
+    (interactive)
+    (let ((pagename (file-name-base (buffer-file-name))))
+      (org-wiki--asset-helm-selection
+       pagename
+       (lambda (file)
+         (insert (format "[[file:%s/%s]]"
+                         pagename
+                         file
+                         )))))
+    (when org-startup-with-inline-images
+      (org-display-inline-images)))
+
+  (use-package org-wiki)
+
+  (setq org-wiki-location "~/writing/wiki")
+  )
 
 (defun frapples-private-org/init-org-ehtml ()
 
