@@ -5,18 +5,8 @@
 
   ;; 各种org相关组件的配置，快捷键设置
 
-  ;; (setq org-ehtml-docroot (expand-file-name "~/writing/notes"))
   ;; org-agenda的文件设置
   (setq org-agenda-files (list org-directory))
-  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
-
-
-  ;; calendar日历设置，设置个人的纪念日，个人的纪念日写在单独的文件里
-  (load-file (expand-file-name "person-private.el" org-directory))
-  (setq my-holidays (append my-holidays (user-private/person-holiday)))
-  ;; 个人纪念日设为重要，会用另外的颜色标记
-  (setq cal-china-x-important-holidays (user-private/person-holiday))
-
 
 
   ;; org对plantuml和ditaa的支持，对应的程序路径
@@ -24,16 +14,9 @@
   (setq org-ditaa-jar-path "~/.spacemacs.d/others/ditaa.jar")
 
 
-  ;; org-pomodoro计时显示在mode line上
-  (spacemacs/toggle-mode-line-org-clock-on)
-
   (with-eval-after-load 'org
-    (user-config/org-agenda)
-    (user-config/org-capture)
     (user-config/org-babel)
-    (user-config/org-export)
-    (user-config/org-others)
-    (user-config/org-mobileorg)))
+    (user-config/org-export)))
 
 
 (defun user-config/org-export ()
@@ -92,81 +75,6 @@
   )
 
 
-(defun user-config/org-agenda ()
-
-  ;; 归档路径配置，这个被我的layer扩展过
-  (setq org-archive-location "{org-path-noext}-archive/{year}/{year}-{month}.org")
-
-  (defun user-function/org-query-gtd-active-project ()
-    "自己是TODO项并且有TODO项的子节点"
-    (and
-     (not (org-query-parent (org-query-stringmatch "^Someday / Maybe")))
-     (org-query-child (org-query-todo))
-     (org-query-todo)))
-
-
-  (with-eval-after-load 'org-agenda
-  ;; 更多参考  https://github.com/remyhonig/org-query
-    (setq org-agenda-custom-commands
-          '(
-            ("n" "TODO清单"
-             ((tags-todo "/+NEXT|+TODO"
-                         ((org-agenda-overriding-header "TODO清单：")
-                          (org-tags-match-list-sublevels nil)
-                          (org-agenda-skip-function
-                           (org-query-select "tree" (org-query-todo)))
-                          (org-agenda-todo-ignore-scheduled t)
-                          (org-agenda-todo-ignore-deadlines t)
-                          (org-agenda-sorting-strategy
-                           '(priority-down category-keep))
-                          ))
-
-              (tags-todo "/+NEXT|+TODO|+WAITING|+DEFERRED"
-                         ((org-agenda-overriding-header "Waiting清单：")
-                          (org-tags-match-list-sublevels nil)
-                          (org-agenda-skip-function
-                           (org-query-select "tree"
-                                             (or (org-query-todo '("WAITING" "DEFERRED"))
-                                                 (and (org-query-todo)
-                                                      (org-query-child (org-query-todo '("WAITING" "DEFERRED")))))))
-                          (org-agenda-todo-ignore-scheduled t)
-                          (org-agenda-todo-ignore-deadlines t)
-                          (org-agenda-sorting-strategy
-                           '(priority-down category-keep))
-                          ))))
-
-
-            ("k" "Maybe清单"
-             ((tags "+MAYBE"
-                    ((org-agenda-overriding-header "Maybe清单：")
-                     (org-tags-match-list-sublevels 'nil)
-                     (org-agenda-sorting-strategy
-                      '(category-keep))))
-              ))
-            ))
-
-    (setq org-agenda-custom-commands (append org-agenda-custom-commands (user-private/agenda-custom-commands)))))
-
-
-(defun user-config/org-capture ()
-  (with-eval-after-load 'org-capture
-    (setq org-capture-templates (user-private/capture-templates))))
-
-
-(defun user-config/org-mobileorg ()
-  (setq org-mobile-files (list (expand-file-name "gtd-demo.org" org-directory))) ; 被同步的文件
-
-  ;; 当pull时，mobileorg.org的内容会被附加到这个文件来（注：这个文件不需要被同步）：
-  (setq org-mobile-inbox-for-pull (expand-file-name "mobile-computer-inbox.org" org-directory))
-
-  ;; 同步盘
-  (setq org-mobile-directory "~/org-sync")
-
-  ;; 加密
-  (setq org-mobile-use-encryption t)
-  (load-file (expand-file-name "mobile-pwd.el" org-directory)))
-
-
 (defun user-config/org-babel ()
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -198,13 +106,3 @@
   (spacemacs/set-leader-keys-for-minor-mode 'org-src-mode
     "q" 'org-edit-src-exit
     "Q" 'org-edit-src-abort))
-
-(defun user-config/org-others ()
-  (setq org-enforce-todo-dependencies t)
-
-  (defun user-function/org-summary-todo (n-done n-not-done)
-    "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states)   ; turn off logging
-      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-  (add-hook 'org-after-todo-statistics-hook 'user-function/org-summary-todo))
-
