@@ -24,9 +24,6 @@
   (setq org-ditaa-jar-path "~/.spacemacs.d/others/ditaa.jar")
 
 
-  ;; deft的笔记路径
-  (setq deft-directory "~/writing/notes")
-
   ;; org-pomodoro计时显示在mode line上
   (spacemacs/toggle-mode-line-org-clock-on)
 

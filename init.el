@@ -87,7 +87,6 @@ values."
      (org :variables
           org-enable-github-support t)
      pandoc
-     deft
      markdown
 
      ;; 美化
@@ -114,7 +113,11 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
 
    ;; 自己需要安装的额外的插件。
-   dotspacemacs-additional-packages '(kotlin-mode flycheck-kotlin) ;emacs-vim-modeline
+   dotspacemacs-additional-packages '(kotlin-mode flycheck-kotlin
+                                                  (vue-mode :location (recipe
+                                                                       :fetcher github
+                                                                       :repo "codefalling/vue-mode"))
+                                                  ) ;emacs-vim-modeline
    ;; A list of packages and/or extensions that will not be install and loaded.
 
    ;; A list of packages that cannot be updated.

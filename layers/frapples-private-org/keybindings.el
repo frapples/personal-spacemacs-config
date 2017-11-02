@@ -165,14 +165,9 @@
 (spacemacs/set-leader-keys "an" nil)
 (spacemacs/declare-prefix "an" "notes/wiki")
 (spacemacs/set-leader-keys
-  "anS" 'deft
-  "anf" (lambda () (interactive) (projectile-find-file-in-directory deft-directory))
   "ans" (lambda () (interactive)
-          (spacemacs/counsel-search '(list "ag" "pt" "ack" "grep") nil deft-directory))
-  "anb" 'org-octopress)
-
-
-(spacemacs/set-leader-keys
+          (spacemacs/counsel-search '(list "ag" "pt" "ack" "grep") nil  org-wiki-location))
+  "anb" 'org-octopress
   ;; (a)sset link
   "ana" 'spacemacs/orgwiki-insert-asset-link
   ;; open asset (d)irectory
@@ -182,7 +177,7 @@
   ;; (i)nsert link
   "ani" 'org-wiki-insert
   ;; (n)ew page
-  "ann" 'org-wiki-make-page)
+  "ann" 'org-wiki-create)
 (spacemacs/set-leader-keys
   ;; (j)ump to page
   "anj" 'org-wiki-helm)

@@ -8,7 +8,10 @@
   (user-config/ugly-patch)
 
   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode))
+  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
+
+  (use-package vue-mode)
+  )
 
 (defun user-config/c-c++ ()
   (setq c-basic-offset 4)
